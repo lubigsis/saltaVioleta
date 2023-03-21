@@ -36,6 +36,14 @@ let cactus2Img;
 let cactus3Img;
 
 
+//-------------------------------------FÍSICA--------
+let velocidadX = -8; //velocidad del cactus hacia la izquierda.
+let velocidadY = 0;
+let gravedad = .4;
+
+let gameOver = false;
+let score = 0;
+
 
 //---------------------------------------------------Edito el tablero --> al canvas
 window.onload = function(){
@@ -71,18 +79,45 @@ window.onload = function(){
 //-----------------------------para dibujar el frame del juego (como la funcion draw() de P5.JS)
 function update(){
     requestAnimationFrame(update);
+    if (gameOver){
+        return;
+    }
+
+    context.clearRect(0, 0, board.width, board.height);//reset canvas.
+
     //violeta
+    velocidadY += gravedad;
+    //quedo por acá
     context.drawImage(violetaImg, violetaX, violetaY, violetaWidth, violetaHeight);
 
     //cactus
     for (let i = 0; i < cactusArray.length; i++) {
         let cactus = cactusArray[i];
+        cactus.x += velocidadX;
         context.drawImage(cactus.img, cactus.x, cactus.y, cactus.width, cactus.height);
     
   }
 }
 
+//-------------------------------
+function moverVioleta(e){
+    if (gameOver){
+        return;
+    }
+
+    if ((e.code == 'Space' || e.code == 'ArrowUp') &&  violeta.y == violetaY){
+        //saltar
+        velocidadY = -10;
+    }
+
+}
+
+
+//------------------------------
 function placeCactus(){
+    if (gameOver){
+        return;
+    }
 
     let cactus = {  //'null' porque la img del cactus y el tamaño de ancho varía, dado que usarpe 3 img.
         img : null,
@@ -109,6 +144,11 @@ function placeCactus(){
         cactus.img = cactus1Img;
         cactus.width = cactus1Width;
         cactusArray.push(cactus);
+    }
+
+    //mientras limito el número de cactus que están al mismo tiempo.
+    if (cactusArray.length > 5){
+        cactusArray.shift(); //remueve el primer elemento del array, de esta manera el array no crece constantemente.
     }
 
 }
