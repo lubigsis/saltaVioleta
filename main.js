@@ -72,6 +72,7 @@ window.onload = function(){
 
     requestAnimationFrame(update);
     setInterval(placeCactus, 1000);// --> 1"
+    document.addEventListener("keydown", moverVioleta);
 
 
 }
@@ -87,8 +88,9 @@ function update(){
 
     //violeta
     velocidadY += gravedad;
-    //quedo por acá
+    violeta.y = Math.min(violeta.y + velocidadY, violetaY); //gravedad para que Violeta no exceda el suelo.
     context.drawImage(violetaImg, violetaX, violetaY, violetaWidth, violetaHeight);
+
 
     //cactus
     for (let i = 0; i < cactusArray.length; i++) {
@@ -105,11 +107,11 @@ function moverVioleta(e){
         return;
     }
 
-    if ((e.code == 'Space' || e.code == 'ArrowUp') &&  violeta.y == violetaY){
+    if ((e.code == "Space" || e.code == "ArrowUp") &&  violeta.y == violetaY){ 
         //saltar
         velocidadY = -10;
     }
-
+    
 }
 
 
