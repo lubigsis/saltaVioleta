@@ -89,7 +89,7 @@ function update(){
     //violeta
     velocidadY += gravedad;
     violeta.y = Math.min(violeta.y + velocidadY, violetaY); //gravedad para que Violeta no exceda el suelo.
-    context.drawImage(violetaImg, violetaX, violetaY, violetaWidth, violetaHeight);
+    context.drawImage(violetaImg, violeta.x, violeta.y, violeta.width, violeta.height);
 
 
     //cactus
@@ -97,8 +97,24 @@ function update(){
         let cactus = cactusArray[i];
         cactus.x += velocidadX;
         context.drawImage(cactus.img, cactus.x, cactus.y, cactus.width, cactus.height);
+
+        //--------------
+        if (detectaColision(violeta, cactus)) {
+            gameOver = true;
+            violetaImg.src = "perroFIN.png";
+            violetaImg.onload = function() {
+                context.drawImage(violetaImg, violeta.x, violeta.y, violeta.width, violeta.height);
+            }
+        }
     
   }
+
+   //--------------------puntaje
+   context.fillStyle="white";
+   context.font="22px courier";
+   score++;
+   context.fillText(score, 8, 23); //ubicación del score
+
 }
 
 //-------------------------------
@@ -152,5 +168,15 @@ function placeCactus(){
     if (cactusArray.length > 5){
         cactusArray.shift(); //remueve el primer elemento del array, de esta manera el array no crece constantemente.
     }
+
+}
+
+//-------------------------------colisiones--------------------------------------------
+function detectaColision(a, b) {
+    return a.x < b.x + b.width &&   //la esquina superior izquierda de 'a' no llega a la esquina superior derecha de 'b'.
+           a.x + a.width > b.x &&   //la esquina superior derecha de 'a' pasa la esquina superior izquierda de 'b'.
+           a.y < b.y + b.height &&  //la esquina superior izquierda de 'a' no llega a la esquina inferior izquierda de 'b'.
+           a.y + a.height > b.y;    //la esquina inferior izquierda de a pasa la esquina superior izquierda de b
+
 
 }
